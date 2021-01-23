@@ -26,7 +26,10 @@
 
       <v-card-text>
         <v-card>
-          <v-card-title>Rooms</v-card-title>
+          <v-card-title
+            >Rooms<v-spacer></v-spacer>
+            <AddRoomModal v-if="!loading" @newRoom="onNewRoom"></AddRoomModal
+          ></v-card-title>
           <v-slide-y-transition class="v-list mb-4" group>
             <template v-for="(room, i) in apartmentRooms">
               <v-list-item :key="'item' + i">
@@ -62,12 +65,15 @@
 import Vue from "vue";
 import { ApartmentRoom } from "@/api/models";
 import { API } from "@/api/api";
+import AddRoomModal from "@/components/AddRoomModal.vue";
 
 export default Vue.extend({
   name: "ApartmentDetail",
+  components: { AddRoomModal },
   data: () => ({
     apartmentRooms: [] as ApartmentRoom[],
-    error: null
+    error: null,
+    loading: false
   }),
   computed: {
     apartmentId() {
@@ -102,7 +108,7 @@ export default Vue.extend({
       if (!this.apartmentId) {
         return;
       }
-
+      this.loading = true;
       API.get(`apartment/${this.apartmentId}`)
         .then(res => res.data)
         .then(({ test }) => {
@@ -110,7 +116,22 @@ export default Vue.extend({
         })
         .catch(error => {
           this.error = error;
-        });
+        })
+        .finally(() => (this.loading = false));
+    },
+    onNewRoom(room: ApartmentRoom) {
+      const newRoom = {
+        ...room,
+        apartmentId: this.apartmentId
+      };
+      this.loading = true;
+      API.post(`room`, newRoom)
+        .then(res => res.data)
+        .then(({ room }) => {
+          this.apartmentRooms.push(room);
+        })
+        .catch(error => (this.error = error))
+        .finally(() => (this.loading = false));
     }
   }
 });
