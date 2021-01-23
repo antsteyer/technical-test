@@ -3,7 +3,7 @@
     <h1 class="mb-4">Rooms</h1>
 
     <v-banner v-if="error" class="text-center" color="error" dark>
-      An Error occured while loading the list
+      {{ error }}
     </v-banner>
     <DataTable
       :action-visible="true"

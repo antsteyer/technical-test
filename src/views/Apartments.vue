@@ -3,7 +3,7 @@
     <h1 class="mb-4">Apartments</h1>
 
     <v-banner color="error" dark class="text-center" v-if="error">
-      An Error occured while loading the list
+      {{ error }}
     </v-banner>
     <DataTable
       :action-visible="true"
@@ -84,7 +84,9 @@ export default Vue.extend({
       this.$router.push({
         name: "ApartmentDetail",
         params: {
-          id: `${apartment.id}`
+          id: `${apartment.id}`,
+          name: apartment.name,
+          number: apartment.number
         }
       });
     },
