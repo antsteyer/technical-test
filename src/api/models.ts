@@ -45,8 +45,8 @@ export interface RoomApartment {
 
 export interface Booking {
   id: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   client: Client;
   room: Room;
 }

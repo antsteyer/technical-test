@@ -1,6 +1,20 @@
 <template>
   <section id="apartments">
-    <h1>Apartments</h1>
+    <h1 class="mb-4">Apartments</h1>
+
+    <v-banner color="error" dark class="text-center" v-if="error">
+      An Error occured while loading the list
+    </v-banner>
+    <DataTable
+      :action-visible="true"
+      :headers="headers"
+      :loading="loading"
+      :rows="apartments"
+      action-libelle="Create Apartment"
+      @actionClicked="goToApartmentCreation"
+      @goToDetail="goToDetail"
+      @refresh="getApartments"
+    ></DataTable>
   </section>
 </template>
 
@@ -8,19 +22,19 @@
 import Vue from "vue";
 import { API } from "@/api/api";
 import { Apartment } from "@/api/models";
+import DataTable from "@/components/DataTable.vue";
 
 interface LocalApartment {
   id: string;
   name: string;
   number: string;
   nbRooms: number;
-  area: string;
 }
 
 export default Vue.extend({
   name: "Apartments",
+  components: { DataTable },
   data: () => ({
-    search: "",
     headers: [
       {
         text: "Number",
@@ -34,10 +48,6 @@ export default Vue.extend({
       {
         text: "Rooms",
         value: "nbRooms"
-      },
-      {
-        text: "Area",
-        value: "area"
       },
       { text: "Actions", value: "actions", sortable: false }
     ],
@@ -54,29 +64,34 @@ export default Vue.extend({
       API.get(`apartment`)
         .then(res => res.data)
         .then(({ apartments }) => {
-          console.log("Apartments", apartments);
           this.apartments = (apartments as Apartment[]).map(apartment => {
             return {
               id: apartment.id,
               name: apartment.name,
               number: apartment.number,
-              nbRooms: apartment.rooms.length,
-              area: apartment.rooms
-                .map(room => room.area)
-                .reduce(
-                  (prevRoomArea, currentRoomArea) =>
-                    prevRoomArea + currentRoomArea
-                )
+              nbRooms: apartment.rooms.length
             };
           });
         })
         .catch(error => {
-          console.error(error);
           this.error = error;
         })
         .finally(() => {
           this.loading = false;
         });
+    },
+    goToDetail(apartment: Apartment) {
+      this.$router.push({
+        name: "ApartmentDetail",
+        params: {
+          id: `${apartment.id}`
+        }
+      });
+    },
+    goToApartmentCreation() {
+      this.$router.push({
+        name: "ApartmentCreation"
+      });
     }
   }
 });

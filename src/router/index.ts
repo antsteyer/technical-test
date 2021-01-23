@@ -38,7 +38,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/client/:id",
-    name: "clientDetail",
+    name: "ClientDetail",
     component: () => import("../views/ClientDetail.vue")
   },
   // Bookings
