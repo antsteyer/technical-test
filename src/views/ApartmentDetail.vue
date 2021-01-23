@@ -95,15 +95,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    console.log("ROUTE PARAMS", this.$route);
     this.getApartmentDetails();
-  },
-  watch: {
-    $route(to, from) {
-      if (to.params.id !== from.params.id) {
-        this.getApartmentDetails();
-      }
-    }
   },
   methods: {
     getApartmentDetails() {
