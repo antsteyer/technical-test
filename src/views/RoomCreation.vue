@@ -1,6 +1,6 @@
 <template>
-  <section id="room-detail">
-    <h1>Room</h1>
+  <section id="room-creation">
+    <h1>Create Room</h1>
   </section>
 </template>
 
@@ -8,6 +8,6 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "RoomDetail"
+  name: "RoomCreation"
 });
 </script>
