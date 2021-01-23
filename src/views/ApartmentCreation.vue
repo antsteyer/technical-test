@@ -78,7 +78,7 @@
           <v-slide-y-transition>
             <div
               v-if="showAtLeastOneRoomRule"
-              class="mt-4 subtitle-1 error--text"
+              class="mt-4 subtitle-1 error--text no-room-warn"
               role="alert"
             >
               You need to add at least one room to create the apartment.
@@ -124,12 +124,14 @@ export default Vue.extend({
     rooms: [] as ApartmentRoom[],
     numberRules: [(v: string | null) => !!v || "Number is required"],
     nameRules: [(v: string | null) => !!v || "Name is required"],
-    showAtLeastOneRoomRule: false,
     error: null,
     loading: false,
     success: null
   }),
   computed: {
+    showAtLeastOneRoomRule() {
+      return this.rooms.length === 0;
+    },
     form(): VForm {
       return this.$refs.form as VForm;
     },
@@ -159,21 +161,14 @@ export default Vue.extend({
   },
   methods: {
     validate() {
-      if (this.rooms.length === 0) {
-        // Warn user he needs to add at least one room to the apartment
-        this.showAtLeastOneRoomRule = true;
-      }
-
       if (!this.form.validate()) {
         return;
       }
 
-      if (this.form.validate() && this.rooms.length === 0) {
+      if (this.form.validate() && this.showAtLeastOneRoomRule) {
         // At least one room
         return;
       }
-
-      this.showAtLeastOneRoomRule = false;
 
       const newApartment = {
         number: this.number,
@@ -198,7 +193,6 @@ export default Vue.extend({
     },
     reset() {
       this.form.reset();
-      this.showAtLeastOneRoomRule = false;
     },
     onNewRoom(room: ApartmentRoom) {
       this.rooms.push(room);

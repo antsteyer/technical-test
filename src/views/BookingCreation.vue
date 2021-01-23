@@ -82,8 +82,8 @@ export default Vue.extend({
     rooms: [] as LocalRoom[],
     selectedRoomId: null as number | null,
     error: null,
-    loading: null,
-    success: null
+    loading: false,
+    success: null as string | null
   }),
   computed: {
     availableRooms(): LocalRoom[] {
@@ -164,7 +164,7 @@ export default Vue.extend({
       API.get(`client`)
         .then(res => res.data)
         .then(({ clients }) => {
-          this.clients = clients
+          this.clients = (clients as Client[])
             .filter(
               client => client.firstName !== null && client.lastName !== null
             )
