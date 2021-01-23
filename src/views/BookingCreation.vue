@@ -101,7 +101,7 @@ export default Vue.extend({
       return this.clients.filter(client => {
         // Exclude clients with a booking
         // Booking doesn't contain id of the client, we can only filter on first and last names
-        return !this.bookings.some(
+        return !this.bookings.find(
           booking =>
             booking.client.firstName === client.firstName &&
             booking.client.lastName === client.lastName
